@@ -98,3 +98,19 @@ def trainingNaiveBayes(trainMarkedWords, trainCategory):
     pWordsHealthy = wordsInHealthNum / healthWordsNum
 
     return pWordsSpamicity, pWordsHealthy, pSpam
+
+
+def bayesTheoremCalcPSWi(pWordsSpamicity, pWordsHealthy, pSpam):
+    """
+    利用贝叶斯定理计算P（S|Wi），即词汇Wi出现，是垃圾邮件或SMS的条件概率
+                      P(Wi|S)P(S)
+    P(S|Wi) = ----------------------------
+                P(Wi|S)P(S) + P(Wi|H)P(H)
+    :param pWordsSpamicity:
+    :param pWordsHealthy:
+    :param pSpam:
+    :return:
+    """
+    temp = pWordsSpamicity * pSpam
+    pSWi = temp / (temp + pWordsHealthy * (1-pSpam))
+    return pSWi
