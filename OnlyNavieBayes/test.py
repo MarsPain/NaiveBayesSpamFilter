@@ -6,7 +6,7 @@
 """
 
 import numpy as np
-import OnlyNavieBayes.NavieBayesian as naiveBayes
+import OnlyNavieBayes.NavieBayes as naiveBayes
 
 # 加载训练获取的语料库信息
 vocabularyList = naiveBayes.getVocabularyList('vocabularyList.txt')

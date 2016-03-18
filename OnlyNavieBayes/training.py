@@ -5,7 +5,7 @@
 @Author: MarkLiu
 """
 import numpy as np
-import OnlyNavieBayes.NavieBayesian as naiveBayes
+import OnlyNavieBayes.NavieBayes as naiveBayes
 
 filename = '../emails/training/SMSCollection.txt'
 smsWords, classLables = naiveBayes.loadSMSData(filename)
