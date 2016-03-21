@@ -65,7 +65,7 @@ def setOfWordsToVecTor(vocabularyList, smsWords):
     vocabMarked = [0] * len(vocabularyList)
     for smsWord in smsWords:
         if smsWord in vocabularyList:
-            vocabMarked[vocabularyList.index(smsWord)] = 1
+            vocabMarked[vocabularyList.index(smsWord)] += 1
     return vocabMarked
 
 
@@ -139,4 +139,15 @@ def dealWithRareWords(pSWi, pSpam, wordsMarked, s=3):
     :param s:
     :return:
     """
-    return (s * pSpam + wordsMarked*pSWi) / (s+wordsMarked)
+    return (s * pSpam + wordsMarked * pSWi) / (s + wordsMarked)
+
+
+def calcUnionProbability(pSWi):
+    """
+    计算联合概率
+    :param pSWi:
+    :return:
+    """
+    yita = np.sum(np.log((1.0 - pSWi) / pSWi))
+    pUnion = 1.0 / (1 + float(np.exp(yita)))
+    return pUnion
