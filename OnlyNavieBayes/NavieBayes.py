@@ -69,6 +69,20 @@ def setOfWordsToVecTor(vocabularyList, smsWords):
     return vocabMarked
 
 
+def setOfWordsListToVecTor(vocabularyList, smsWordsList):
+    """
+    将文本数据的二维数组标记
+    :param vocabularyList:
+    :param smsWordsList:
+    :return:
+    """
+    vocabMarkedList = []
+    for i in range(len(smsWordsList)):
+        vocabMarked = setOfWordsToVecTor(vocabularyList, smsWordsList[i])
+        vocabMarkedList.append(vocabMarked)
+    return vocabMarkedList
+
+
 def trainingNaiveBayes(trainMarkedWords, trainCategory):
     """
     训练数据集中获取语料库中词汇的spamicity：P（Wi|S）
@@ -87,9 +101,9 @@ def trainingNaiveBayes(trainMarkedWords, trainCategory):
     spamWordsNum = 0.0
     healthWordsNum = 0.0
     for i in range(0, numTrainDoc):
-        if trainCategory[i] == 1:   # 如果是垃圾SMS或邮件
+        if trainCategory[i] == 1:  # 如果是垃圾SMS或邮件
             wordsInSpamNum += trainMarkedWords[i]
-            spamWordsNum += sum(trainMarkedWords[i])    # 统计Spam中余力爱哦库中词汇出现的总次数
+            spamWordsNum += sum(trainMarkedWords[i])  # 统计Spam中余力爱哦库中词汇出现的总次数
         else:
             wordsInHealthNum += trainMarkedWords[i]
             healthWordsNum += sum(trainMarkedWords[i])
@@ -112,5 +126,17 @@ def bayesTheoremCalcPSWi(pWordsSpamicity, pWordsHealthy, pSpam):
     :return:
     """
     temp = pWordsSpamicity * pSpam
-    pSWi = temp / (temp + pWordsHealthy * (1-pSpam))
+    pSWi = temp / (temp + pWordsHealthy * (1 - pSpam))
     return pSWi
+
+
+def dealWithRareWords(pSWi, pSpam, wordsMarked, s=3):
+    """
+    处理测试文本在词汇列表中没有出现的词汇
+    :param pSWi:
+    :param pSpam:
+    :param wordsMarked: ndarray
+    :param s:
+    :return:
+    """
+    return (s * pSpam + wordsMarked*pSWi) / (s+wordsMarked)

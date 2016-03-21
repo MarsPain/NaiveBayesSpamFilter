@@ -11,10 +11,7 @@ filename = '../emails/training/SMSCollection.txt'
 smsWords, classLables = naiveBayes.loadSMSData(filename)
 vocabularyList = naiveBayes.createVocabularyList(smsWords)
 print "生成语料库！"
-trainMarkedWords = []
-for words in smsWords:
-    vocabMarked = naiveBayes.setOfWordsToVecTor(vocabularyList, words)
-    trainMarkedWords.append(vocabMarked)
+trainMarkedWords = naiveBayes.setOfWordsListToVecTor(vocabularyList, smsWords)
 print "数据标记完成！"
 # 转成array向量
 trainMarkedWords = np.array(trainMarkedWords)
