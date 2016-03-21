@@ -107,20 +107,36 @@ def trainingNaiveBayes(trainMarkedWords, trainCategory):
     pSpam = sum(trainCategory) / float(numTrainDoc)
 
     # 统计语料库中词汇在S和H中出现的次数
-    wordsInSpamNum = np.zeros((1, numWords))
-    wordsInHealthNum = np.zeros((1, numWords))
-    spamWordsNum = 0.0
-    healthWordsNum = 0.0
+    wordsInSpamNum = np.ones(numWords)
+    wordsInHealthNum = np.ones(numWords)
+    spamWordsNum = 2.0
+    healthWordsNum = 2.0
     for i in range(0, numTrainDoc):
         if trainCategory[i] == 1:  # 如果是垃圾SMS或邮件
             wordsInSpamNum += trainMarkedWords[i]
-            spamWordsNum += sum(trainMarkedWords[i])  # 统计Spam中余力爱哦库中词汇出现的总次数
+            spamWordsNum += sum(trainMarkedWords[i])  # 统计Spam中语料库中词汇出现的总次数
         else:
             wordsInHealthNum += trainMarkedWords[i]
             healthWordsNum += sum(trainMarkedWords[i])
     # 计算语料库中词汇的spamicity：P（Wi|S）和P（Wi|H）
-    pWordsSpamicity = wordsInSpamNum / spamWordsNum
-    pWordsHealthy = wordsInHealthNum / healthWordsNum
+    # pWordsSpamicity = []
+    #
+    # for num in wordsInSpamNum:
+    #     if num == 0:
+    #         pWordsSpamicity.append(np.log(pSpam))
+    #     else:
+    #         pWordsSpamicity.append(np.log(num / spamWordsNum))
+    #
+    # pWordsHealthy = []
+    # for num1 in wordsInHealthNum:
+    #     if num1 == 0:
+    #         pWordsHealthy.append(np.log(pSpam))
+    #     else:
+    #         pWordsHealthy.append(np.log(num1 / healthWordsNum))
+    #
+    # return np.array(pWordsSpamicity), np.array(pWordsHealthy), pSpam
+    pWordsSpamicity = np.log(wordsInSpamNum / spamWordsNum)
+    pWordsHealthy = np.log(wordsInHealthNum / healthWordsNum)
 
     return pWordsSpamicity, pWordsHealthy, pSpam
 
