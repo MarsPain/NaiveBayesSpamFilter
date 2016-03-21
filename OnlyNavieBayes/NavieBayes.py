@@ -63,6 +63,7 @@ def getVocabularyList(fileName):
     """
     fr = open(fileName)
     vocabularyList = fr.readline().strip().split('\t')
+    fr.close()
     return vocabularyList
 
 
@@ -119,111 +120,61 @@ def trainingNaiveBayes(trainMarkedWords, trainCategory):
             wordsInHealthNum += trainMarkedWords[i]
             healthWordsNum += sum(trainMarkedWords[i])
     # 计算语料库中词汇的spamicity：P（Wi|S）和P（Wi|H）
-    # pWordsSpamicity = []
+    pWordsSpamicity = []
+
+    for num in wordsInSpamNum:
+        if num == 0:
+            pWordsSpamicity.append(np.log(pSpam))
+        else:
+            pWordsSpamicity.append(np.log(num / spamWordsNum))
+
+    pWordsHealthy = []
+    for num1 in wordsInHealthNum:
+        if num1 == 0:
+            pWordsHealthy.append(np.log(pSpam))
+        else:
+            pWordsHealthy.append(np.log(num1 / healthWordsNum))
+
+    return np.array(pWordsSpamicity), np.array(pWordsHealthy), pSpam
+
+    # pWordsSpamicity = np.log(wordsInSpamNum / spamWordsNum)
+    # pWordsHealthy = np.log(wordsInHealthNum / healthWordsNum)
     #
-    # for num in wordsInSpamNum:
-    #     if num == 0:
-    #         pWordsSpamicity.append(np.log(pSpam))
-    #     else:
-    #         pWordsSpamicity.append(np.log(num / spamWordsNum))
-    #
-    # pWordsHealthy = []
-    # for num1 in wordsInHealthNum:
-    #     if num1 == 0:
-    #         pWordsHealthy.append(np.log(pSpam))
-    #     else:
-    #         pWordsHealthy.append(np.log(num1 / healthWordsNum))
-    #
-    # return np.array(pWordsSpamicity), np.array(pWordsHealthy), pSpam
-    pWordsSpamicity = np.log(wordsInSpamNum / spamWordsNum)
-    pWordsHealthy = np.log(wordsInHealthNum / healthWordsNum)
-
-    return pWordsSpamicity, pWordsHealthy, pSpam
+    # return pWordsSpamicity, pWordsHealthy, pSpam
 
 
-def bayesTheoremCalcPSWi(pWordsSpamicity, pWordsHealthy, pSpam):
+def getTrainedModelInfo():
     """
-    利用贝叶斯定理计算P（S|Wi），即词汇Wi出现，是垃圾邮件或SMS的条件概率
-                      P(Wi|S)P(S)
-    P(S|Wi) = ----------------------------
-                P(Wi|S)P(S) + P(Wi|H)P(H)
-    :param pWordsSpamicity:
-    :param pWordsHealthy:
-    :param pSpam:
+    获取训练的模型信息
     :return:
     """
-    temp = pWordsSpamicity * pSpam
-    pSWi = temp / (temp + pWordsHealthy * (1 - pSpam))
-    return pSWi
+    # 加载训练获取的语料库信息
+    vocabularyList = getVocabularyList('vocabularyList.txt')
+    pWordsHealthy = np.loadtxt('pWordsHealthy.txt', delimiter='\t')
+    pWordsSpamicity = np.loadtxt('pWordsSpamicity.txt', delimiter='\t')
+    fr = open('pSpam.txt')
+    pSpam = float(fr.readline().strip())
+    fr.close()
+
+    return vocabularyList, pWordsSpamicity, pWordsHealthy, pSpam
 
 
-def dealWithRareWords(pSWi, pSpam, wordsMarked, s=3):
-    """
-    处理测试文本在词汇列表中没有出现的词汇
-    :param pSWi:
-    :param pSpam:
-    :param wordsMarked: ndarray
-    :param s:
-    :return:
-    """
-    return (s * pSpam + wordsMarked * pSWi) / (s + wordsMarked)
-
-
-def calcUnionProbability(pSWi):
-    """
-    计算联合概率
-    :param pSWi:
-    :return:
-    """
-    numerator = 1.0
-    denominator = 1.0
-    for i in range(len(pSWi)):
-        numerator *= pSWi[i]
-        denominator *= (1-pSWi[i])
-    denominator = numerator + denominator
-
-    # yita = np.sum(np.log((1.0 - pSWi) / pSWi))
-    # print 'yita:', yita
-    # pUnion = 1.0 / (1 + float(np.exp(yita)))
-    pUnion = numerator / denominator
-    return pUnion
-
-
-def getPreN_pWiS(pWordsSpamicity, pWordsHealthy, testWordsMarkedArray, N=15):
-    """
-    选取pWordsSpamicity从大到小排序后前N个值
-    :param pWordsSpamicity:
-    :param pWordsHealthy:
-    :param testWordsMarkedArray:
-    :param N:
-    :return:
-    """
-    sortedIndexs = pWordsSpamicity.argsort()
-    sorted_pWordsSpamicity = pWordsSpamicity[sortedIndexs]
-    sorted_pWordsHealthy = pWordsHealthy[sortedIndexs]
-    sortedWordsMarked = testWordsMarkedArray[sortedIndexs]
-    return sorted_pWordsSpamicity[-1*N:], sorted_pWordsHealthy[-1*N:], sortedWordsMarked[-1*N:]
-
-
-def getPreN_pSWi(pSWi, testWordsMarkedArray, N=15):
-    """
-    选取pWordsSpamicity从大到小排序后前N个值
-    :param pSWi:
-    :param testWordsMarkedArray:
-    :param N:
-    :return:
-    """
-    sortedIndexs = pSWi.argsort()
-    sorted_pWordsSpamicity = pSWi[sortedIndexs]
-    sortedWordsMarked = testWordsMarkedArray[sortedIndexs]
-    return sorted_pWordsSpamicity[-1*N:], sortedWordsMarked[-1*N:]
-
-
-def classify(pSWi_preN):
+def classify(vocabularyList, pWordsSpamicity, pWordsHealthy, pSpam, testWords):
     """
     计算联合概率进行分类
-    :param pSWi_preN:pSWi最大的前N个值
+    :param vocabularyList:
+    :param pWordsSpamicity:
+    :param pWordsHealthy:
+    :param pSpam:
+    :param testWords:
     :return:
     """
-    pUnion = calcUnionProbability(pSWi_preN)
-    print 'pUnion:', pUnion
+    testWordsCount = setOfWordsToVecTor(vocabularyList, testWords)
+    testWordsMarkedArray = np.array(testWordsCount)
+    # 计算P(Ci|W)，W为向量。P(Ci|W)只需计算P(W|Ci)P(Ci)
+    p1 = sum(testWordsMarkedArray * pWordsSpamicity) + np.log(pSpam)
+    p0 = sum(testWordsMarkedArray * pWordsHealthy) + np.log(1 - pSpam)
+    if p1 > p0:
+        return 1
+    else:
+        return 0
