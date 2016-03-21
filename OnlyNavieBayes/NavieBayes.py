@@ -55,6 +55,17 @@ def createVocabularyList(smsWords):
     return vocabularyList
 
 
+def getVocabularyList(fileName):
+    """
+    从词汇列表文件中获取语料库
+    :param fileName:
+    :return:
+    """
+    fr = open(fileName)
+    vocabularyList = fr.readline().strip().split('\t')
+    return vocabularyList
+
+
 def setOfWordsToVecTor(vocabularyList, smsWords):
     """
     SMS内容匹配预料库，标记预料库的词汇出现的次数
@@ -148,6 +159,55 @@ def calcUnionProbability(pSWi):
     :param pSWi:
     :return:
     """
-    yita = np.sum(np.log((1.0 - pSWi) / pSWi))
-    pUnion = 1.0 / (1 + float(np.exp(yita)))
+    numerator = 1.0
+    denominator = 1.0
+    for i in range(len(pSWi)):
+        numerator *= pSWi[i]
+        denominator *= (1-pSWi[i])
+    denominator = numerator + denominator
+
+    # yita = np.sum(np.log((1.0 - pSWi) / pSWi))
+    # print 'yita:', yita
+    # pUnion = 1.0 / (1 + float(np.exp(yita)))
+    pUnion = numerator / denominator
     return pUnion
+
+
+def getPreN_pWiS(pWordsSpamicity, pWordsHealthy, testWordsMarkedArray, N=15):
+    """
+    选取pWordsSpamicity从大到小排序后前N个值
+    :param pWordsSpamicity:
+    :param pWordsHealthy:
+    :param testWordsMarkedArray:
+    :param N:
+    :return:
+    """
+    sortedIndexs = pWordsSpamicity.argsort()
+    sorted_pWordsSpamicity = pWordsSpamicity[sortedIndexs]
+    sorted_pWordsHealthy = pWordsHealthy[sortedIndexs]
+    sortedWordsMarked = testWordsMarkedArray[sortedIndexs]
+    return sorted_pWordsSpamicity[-1*N:], sorted_pWordsHealthy[-1*N:], sortedWordsMarked[-1*N:]
+
+
+def getPreN_pSWi(pSWi, testWordsMarkedArray, N=15):
+    """
+    选取pWordsSpamicity从大到小排序后前N个值
+    :param pSWi:
+    :param testWordsMarkedArray:
+    :param N:
+    :return:
+    """
+    sortedIndexs = pSWi.argsort()
+    sorted_pWordsSpamicity = pSWi[sortedIndexs]
+    sortedWordsMarked = testWordsMarkedArray[sortedIndexs]
+    return sorted_pWordsSpamicity[-1*N:], sortedWordsMarked[-1*N:]
+
+
+def classify(pSWi_preN):
+    """
+    计算联合概率进行分类
+    :param pSWi_preN:pSWi最大的前N个值
+    :return:
+    """
+    pUnion = calcUnionProbability(pSWi_preN)
+    print 'pUnion:', pUnion

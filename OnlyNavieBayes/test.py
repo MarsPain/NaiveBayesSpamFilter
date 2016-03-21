@@ -16,13 +16,21 @@ fr = open('pSpam.txt')
 pSpam = float(fr.readline().strip())
 print 'pSpam:', type(pSpam), pSpam
 
-# 保存！！
-pSWi, pHWi = naiveBayes.bayesTheoremCalc(pWordsSpamicity, pWordsHealthy, pSpam)
-
 # 加载测试数据
 filename = '../emails/test/test.txt'
 smsWords, classLables = naiveBayes.loadSMSData(filename)
 testWordsCount = naiveBayes.setOfWordsToVecTor(vocabularyList, smsWords[0])
-testWordsCountArray = np.array(testWordsCount)
-result = naiveBayes.classify(pSWi, pHWi, pSpam, testWordsCountArray)
-print 'result:', result
+testWordsMarkedArray = np.array(testWordsCount)
+
+# 保存！！
+pSWi = naiveBayes.bayesTheoremCalcPSWi(pWordsSpamicity, pWordsHealthy, pSpam)
+
+sorted_pSWi_N, sortedWordsMarked_N = \
+    naiveBayes.getPreN_pSWi(pSWi, testWordsMarkedArray, N=15)
+
+pSWi = naiveBayes.dealWithRareWords(sorted_pSWi_N, pSpam, sortedWordsMarked_N)
+print 'dealWithRareWords:'
+print pSWi
+
+print np.sum(sorted_pSWi_N * sortedWordsMarked_N)
+naiveBayes.classify(pSWi)
