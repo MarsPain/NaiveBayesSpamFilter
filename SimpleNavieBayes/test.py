@@ -4,7 +4,7 @@
 """
 @Author: MarkLiu
 """
-import OnlyNavieBayes.NavieBayes as naiveBayes
+import SimpleNavieBayes.NavieBayes as naiveBayes
 import random
 import numpy as np
 
