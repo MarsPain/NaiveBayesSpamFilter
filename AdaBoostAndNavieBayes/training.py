@@ -53,7 +53,7 @@ def training():
 
             if smsType != testWordsType[j]:
                 errorCount += 1
-                alpha = (ps - ph) / ph
+                alpha = ph - ps
                 DS[testWordsCount != 0] = (DS[testWordsCount != 0] * np.exp(alpha))
                 DH[testWordsCount != 0] = (DH[testWordsCount != 0] * np.exp(-1 * alpha))
 
