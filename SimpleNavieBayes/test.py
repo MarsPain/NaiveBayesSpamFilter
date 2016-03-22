@@ -35,7 +35,7 @@ def testClassifyErrorRate():
     testWords = []
     testWordsType = []
 
-    testCount = 40
+    testCount = 1000
     for i in range(testCount):
         randomIndex = int(random.uniform(0, len(smsWords)))
         testWordsType.append(classLables[randomIndex])

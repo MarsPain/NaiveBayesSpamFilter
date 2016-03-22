@@ -34,7 +34,7 @@ def loadSMSData(fileName):
         linedatas = line.strip().split('\t')
         if linedatas[0] == 'ham':
             classCategory.append(0)
-        else:
+        elif linedatas[0] == 'spam':
             classCategory.append(1)
         # 切分文本
         words = textParser(linedatas[1])
@@ -120,27 +120,27 @@ def trainingNaiveBayes(trainMarkedWords, trainCategory):
             wordsInHealthNum += trainMarkedWords[i]
             healthWordsNum += sum(trainMarkedWords[i])
     # 计算语料库中词汇的spamicity：P（Wi|S）和P（Wi|H）
-    pWordsSpamicity = []
-
-    for num in wordsInSpamNum:
-        if num == 0:
-            pWordsSpamicity.append(np.log(pSpam))
-        else:
-            pWordsSpamicity.append(np.log(num / spamWordsNum))
-
-    pWordsHealthy = []
-    for num1 in wordsInHealthNum:
-        if num1 == 0:
-            pWordsHealthy.append(np.log(pSpam))
-        else:
-            pWordsHealthy.append(np.log(num1 / healthWordsNum))
-
-    return np.array(pWordsSpamicity), np.array(pWordsHealthy), pSpam
-
-    # pWordsSpamicity = np.log(wordsInSpamNum / spamWordsNum)
-    # pWordsHealthy = np.log(wordsInHealthNum / healthWordsNum)
+    # pWordsSpamicity = []
     #
-    # return pWordsSpamicity, pWordsHealthy, pSpam
+    # for num in wordsInSpamNum:
+    #     if num == 0:
+    #         pWordsSpamicity.append(np.log(pSpam))
+    #     else:
+    #         pWordsSpamicity.append(np.log(num / spamWordsNum))
+    #
+    # pWordsHealthy = []
+    # for num1 in wordsInHealthNum:
+    #     if num1 == 0:
+    #         pWordsHealthy.append(np.log(1-pSpam))
+    #     else:
+    #         pWordsHealthy.append(np.log(num1 / healthWordsNum))
+    #
+    # return np.array(pWordsSpamicity), np.array(pWordsHealthy), pSpam
+
+    pWordsSpamicity = np.log(wordsInSpamNum / spamWordsNum)
+    pWordsHealthy = np.log(wordsInHealthNum / healthWordsNum)
+
+    return pWordsSpamicity, pWordsHealthy, pSpam
 
 
 def getTrainedModelInfo():
