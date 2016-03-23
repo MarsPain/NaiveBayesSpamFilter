@@ -55,7 +55,7 @@ def training():
                 # alpha = (ph - ps) / ps
                 alpha = ps - ph
                 if testWordsType[j] == 1:   # 原先为spam，预测成ham
-                    DS[testWordsCount != 0] = (DS[testWordsCount != 0] - np.exp(alpha)) / DS[testWordsCount != 0]
+                    DS[testWordsCount != 0] = np.abs((DS[testWordsCount != 0] - np.exp(alpha)) / DS[testWordsCount != 0])
                 else:   # 原先为ham，预测成spam
                     DS[testWordsCount != 0] = (DS[testWordsCount != 0] + np.exp(alpha)) / DS[testWordsCount != 0]
         print 'DS:', DS
