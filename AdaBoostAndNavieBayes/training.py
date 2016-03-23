@@ -9,9 +9,10 @@ import random
 import numpy as np
 
 
-def training():
+def trainingAdaboostGetDS(iterateNum=40):
     """
     测试分类的错误率
+    :param iterateNum:
     :return:
     """
     filename = '../emails/training/SMSCollection.txt'
@@ -28,7 +29,10 @@ def training():
         testWords.append(smsWords[randomIndex])
         del (smsWords[randomIndex])
         del (classLables[randomIndex])
-
+    """
+    训练阶段，可将选择的vocabularyList也放到整个循环中，以选出
+    错误率最低的情况，获取最低错误率的vocabularyList
+    """
     vocabularyList = boostNaiveBayes.createVocabularyList(smsWords)
     print "生成语料库！"
     trainMarkedWords = boostNaiveBayes.setOfWordsListToVecTor(vocabularyList, smsWords)
@@ -39,10 +43,10 @@ def training():
     pWordsSpamicity, pWordsHealthy, pSpam = \
         boostNaiveBayes.trainingNaiveBayes(trainMarkedWords, classLables)
 
-    iterateNum = 40
-
     DS = np.ones(len(vocabularyList))
 
+    ds_errorRate = {}
+    minErrorRate = np.inf
     for i in range(iterateNum):
         errorCount = 0.0
         for j in range(testCount):
@@ -54,16 +58,38 @@ def training():
                 errorCount += 1
                 # alpha = (ph - ps) / ps
                 alpha = ps - ph
-                if testWordsType[j] == 1:   # 原先为spam，预测成ham
-                    DS[testWordsCount != 0] = np.abs((DS[testWordsCount != 0] - np.exp(alpha)) / DS[testWordsCount != 0])
-                else:   # 原先为ham，预测成spam
+                if alpha < 0:  # 原先为spam，预测成ham
+                    DS[testWordsCount != 0] = np.abs(
+                            (DS[testWordsCount != 0] - np.exp(alpha)) / DS[testWordsCount != 0])
+                else:  # 原先为ham，预测成spam
                     DS[testWordsCount != 0] = (DS[testWordsCount != 0] + np.exp(alpha)) / DS[testWordsCount != 0]
         print 'DS:', DS
         errorRate = errorCount / testCount
+        if errorRate < minErrorRate:
+            minErrorRate = errorRate
+            ds_errorRate['minErrorRate'] = minErrorRate
+            ds_errorRate['DS'] = DS
         print '第 %d 轮迭代，错误个数 %d ，错误率 %f' % (i, errorCount, errorRate)
         if errorRate == 0.0:
             break
+    ds_errorRate['vocabularyList'] = vocabularyList
+    ds_errorRate['pWordsSpamicity'] = pWordsSpamicity
+    ds_errorRate['pWordsHealthy'] = pWordsHealthy
+    ds_errorRate['pSpam'] = pSpam
+    return ds_errorRate
 
 
 if __name__ == '__main__':
-    training()
+    dsErrorRate = trainingAdaboostGetDS()
+    # 保存模型训练的信息
+    np.savetxt('pWordsSpamicity.txt', dsErrorRate['pWordsSpamicity'], delimiter='\t')
+    np.savetxt('pWordsHealthy.txt', dsErrorRate['pWordsHealthy'], delimiter='\t')
+    np.savetxt('pSpam.txt', np.array([dsErrorRate['pSpam']]), delimiter='\t')
+    np.savetxt('trainDS.txt', dsErrorRate['DS'], delimiter='\t')
+    np.savetxt('trainMinErrorRate.txt', np.array([dsErrorRate['minErrorRate']]), delimiter='\t')
+    vocabulary = dsErrorRate['vocabularyList']
+    fw = open('vocabularyList.txt', 'w')
+    for i in range(len(vocabulary)):
+        fw.write(vocabulary[i] + '\t')
+    fw.flush()
+    fw.close()
