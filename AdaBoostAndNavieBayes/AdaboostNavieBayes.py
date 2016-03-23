@@ -78,7 +78,7 @@ def setOfWordsToVecTor(vocabularyList, smsWords):
     for smsWord in smsWords:
         if smsWord in vocabularyList:
             vocabMarked[vocabularyList.index(smsWord)] += 1
-    return vocabMarked
+    return np.array(vocabMarked)
 
 
 def setOfWordsListToVecTor(vocabularyList, smsWordsList):
@@ -142,21 +142,19 @@ def getTrainedModelInfo():
     return vocabularyList, pWordsSpamicity, pWordsHealthy, pSpam
 
 
-def classify(pWordsSpamicity, pWordsHealthy, DS, DH, pSpam, testWordsCount):
+def classify(pWordsSpamicity, pWordsHealthy, DS, pSpam, testWordsMarkedArray):
     """
     计算联合概率进行分类
-    :param testWordsCount:
+    :param testWordsMarkedArray:
     :param pWordsSpamicity:
     :param pWordsHealthy:
-    :param DH:  adaboost算法额外增加的权重系数
     :param DS:  adaboost算法额外增加的权重系数
     :param pSpam:
     :return:
     """
-    testWordsMarkedArray = np.array(testWordsCount)
     # 计算P(Ci|W)，W为向量。P(Ci|W)只需计算P(W|Ci)P(Ci)
     ps = sum(testWordsMarkedArray * pWordsSpamicity * DS) + np.log(pSpam)
-    ph = sum(testWordsMarkedArray * pWordsHealthy * DH) + np.log(1 - pSpam)
+    ph = sum(testWordsMarkedArray * pWordsHealthy) + np.log(1 - pSpam)
     if ps > ph:
         return ps, ph, 1
     else:

@@ -41,22 +41,24 @@ def training():
 
     iterateNum = 40
 
-    DS = 0.5 * np.ones(len(vocabularyList))
-    DH = 0.5 * np.ones(len(vocabularyList))
+    DS = np.ones(len(vocabularyList))
 
     for i in range(iterateNum):
         errorCount = 0.0
         for j in range(testCount):
             testWordsCount = boostNaiveBayes.setOfWordsToVecTor(vocabularyList, testWords[j])
             ps, ph, smsType = boostNaiveBayes.classify(pWordsSpamicity, pWordsHealthy,
-                                                       DS, DH, pSpam, testWordsCount)
+                                                       DS, pSpam, testWordsCount)
 
             if smsType != testWordsType[j]:
                 errorCount += 1
-                alpha = ph - ps
-                DS[testWordsCount != 0] = (DS[testWordsCount != 0] * np.exp(alpha))
-                DH[testWordsCount != 0] = (DH[testWordsCount != 0] * np.exp(-1 * alpha))
-
+                # alpha = (ph - ps) / ps
+                alpha = ps - ph
+                if testWordsType[j] == 1:   # 原先为spam，预测成ham
+                    DS[testWordsCount != 0] = (DS[testWordsCount != 0] - np.exp(alpha)) / DS[testWordsCount != 0]
+                else:   # 原先为ham，预测成spam
+                    DS[testWordsCount != 0] = (DS[testWordsCount != 0] + np.exp(alpha)) / DS[testWordsCount != 0]
+        print 'DS:', DS
         errorRate = errorCount / testCount
         print '第 %d 轮迭代，错误个数 %d ，错误率 %f' % (i, errorCount, errorRate)
         if errorRate == 0.0:
