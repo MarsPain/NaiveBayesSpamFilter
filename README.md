@@ -53,7 +53,7 @@
 
 ##2 Running Adaboost on Naive Bayes
 
-我们在计算ps和ph联合后验概率时，可引入一个调整因子DS，其作用是调整词汇表中某一词汇的“垃圾程度”(spamicity)，
+&emsp;&emsp;我们在计算ps和ph联合后验概率时，可引入一个调整因子DS，其作用是调整词汇表中某一词汇的“垃圾程度”(spamicity)，
 ```
     ps = sum(testWordsMarkedArray * pWordsSpamicity * DS) + np.log(pSpam)
 ```
@@ -75,3 +75,20 @@ DS初始化为和词汇列表大小相等的全一向量
     计算错误率
     保存最小的错误率和此时的词汇列表、P(Wi|S)和P(Wi|H)、DS等信息，即保存训练好的最佳模型的信息
 ```
+&emsp;&emsp;**测试效果：**
+&emsp;&emsp;5574个样本，获取Adaboost算法训练的最佳模型信息（包括词汇列表、P(Wi|S)和P(Wi|H)、DS等），对1000个测试样本，分类的平均错误率约为：0.5%。
+
+## License
+Copyright SunnyMarkLiu
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
