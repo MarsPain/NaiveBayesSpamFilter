@@ -4,7 +4,7 @@
 &emsp;&emsp;假设邮件的内容中包含的词汇为Wi，垃圾邮件Spam，正常邮件ham。
 判断一份邮件，内容包含的词汇为Wi，判断该邮件是否是垃圾邮件，即计算P（S|Wi）这个条件概率。根据Bayes' theorem：
 
-![Bayes' theorem](https://upload.wikimedia.org/math/a/6/e/a6e7f8c521dcf018b6480a8967773ac3.png)
+&emsp;&emsp;![Bayes' theorem](https://upload.wikimedia.org/math/a/6/e/a6e7f8c521dcf018b6480a8967773ac3.png)
 
 &emsp;&emsp;其中：
 
@@ -16,7 +16,7 @@
 
 &emsp;&emsp;对于邮件中出现的所有词汇，考虑每个词汇出现事件的独立性，计算Pr(S|Wi)的联合概率Pr(S|W)，W={W1，W2，...Wn}：
 
-![Bayes' theorem](https://upload.wikimedia.org/math/f/1/d/f1d1c65ee72c294f1fc9b4eb156f5768.png)
+&emsp;&emsp;![Bayes' theorem](https://upload.wikimedia.org/math/f/1/d/f1d1c65ee72c294f1fc9b4eb156f5768.png)
 
 &emsp;&emsp;其中：
 - P        即Pr(S|W)，出现词汇W={W1，W2......Wn}的邮件是垃圾邮件的条件概率；
@@ -77,6 +77,11 @@ DS初始化为和词汇列表大小相等的全一向量
 ```
 &emsp;&emsp;**测试效果：**
 &emsp;&emsp;5574个样本，获取Adaboost算法训练的最佳模型信息（包括词汇列表、P(Wi|S)和P(Wi|H)、DS等），对1000个测试样本，分类的平均错误率约为：0.5%。
+
+##References
+[Running Adaboost on Naive Bayes](http://web.cecs.pdx.edu/~mm/MachineLearningWinter2010/BoostingNaiveBayes.pdf)
+[Boosting and naive bayesian learning](http://pages.cs.wisc.edu/~dyer/cs540/handouts/elkan97boosting.pdf)
+[Naive Bayes spam filtering](https://en.wikipedia.org/wiki/Naive_Bayes_spam_filtering)
 
 ## License
 Copyright SunnyMarkLiu
