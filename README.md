@@ -79,9 +79,9 @@ DS初始化为和词汇列表大小相等的全一向量
 &emsp;&emsp;5574个样本，获取Adaboost算法训练的最佳模型信息（包括词汇列表、P(Wi|S)和P(Wi|H)、DS等），对1000个测试样本，分类的平均错误率约为：0.5%。
 
 ##References
-[Running Adaboost on Naive Bayes](http://web.cecs.pdx.edu/~mm/MachineLearningWinter2010/BoostingNaiveBayes.pdf)
-[Boosting and naive bayesian learning](http://pages.cs.wisc.edu/~dyer/cs540/handouts/elkan97boosting.pdf)
-[Naive Bayes spam filtering](https://en.wikipedia.org/wiki/Naive_Bayes_spam_filtering)
+[Running Adaboost on Naive Bayes](http://web.cecs.pdx.edu/~mm/MachineLearningWinter2010/BoostingNaiveBayes.pdf)<br>
+[Boosting and naive bayesian learning](http://pages.cs.wisc.edu/~dyer/cs540/handouts/elkan97boosting.pdf)<br>
+[Naive Bayes spam filtering](https://en.wikipedia.org/wiki/Naive_Bayes_spam_filtering)<br>
 
 ## License
 Copyright SunnyMarkLiu
