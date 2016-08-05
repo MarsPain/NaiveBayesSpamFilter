@@ -58,7 +58,8 @@ def trainingAdaboostGetDS(iterateNum=40):
                 errorCount += 1
                 # alpha = (ph - ps) / ps
                 alpha = ps - ph
-                if alpha < 0:  # 原先为spam，预测成ham
+                # if alpha < 0:  # 原先为spam，预测成ham， ERROR!
+                if alpha > 0: # 原先为ham，预测成spam
                     DS[testWordsCount != 0] = np.abs(
                             (DS[testWordsCount != 0] - np.exp(alpha)) / DS[testWordsCount != 0])
                 else:  # 原先为ham，预测成spam
