@@ -23,7 +23,7 @@
 - P        即Pr(S|W)，出现词汇W={W1，W2......Wn}的邮件是垃圾邮件的条件概率；
 - Pi       即Pr(S|Wi)，出现词汇Wi的邮件是垃圾邮件的条件概率；
 
-&emsp;&emsp;**注：**程序中，通过计算出Pr(S|W)和Pr(H|W)，比较Pr(S|W)和Pr(H|W)的大小，判断是垃圾邮件还是正常邮件。我们发现Pr(S|W)和Pr(H|W)计算的分母相同，所以我们只需要比较分子即可。
+&emsp;&emsp;**注：** 程序中，通过计算出Pr(S|W)和Pr(H|W)，比较Pr(S|W)和Pr(H|W)的大小，判断是垃圾邮件还是正常邮件。我们发现Pr(S|W)和Pr(H|W)计算的分母相同，所以我们只需要比较分子即可。
 
 &emsp;&emsp;**但存在两个问题：**
 
@@ -49,7 +49,7 @@
     ps = sum(testWordsMarkedArray * pWordsSpamicity) + np.log(pSpam)
     ph = sum(testWordsMarkedArray * pWordsHealthy) + np.log(1 - pSpam)
 ```
-&emsp;&emsp;**测试效果：**5574个样本，采用交叉验证，随机选取4574个作为训练样本，产生词汇列表（语料库），对1000个测试样本，分类的平均错误率约为：2.5%。
+&emsp;&emsp;**测试效果：** 5574个样本，采用交叉验证，随机选取4574个作为训练样本，产生词汇列表（语料库），对1000个测试样本，分类的平均错误率约为：2.5%。
 
 ## 2 Running Adaboost on Naive Bayes
 
@@ -75,7 +75,7 @@ DS初始化为和词汇列表大小相等的全一向量
     计算错误率
     保存最小的错误率和此时的词汇列表、P(Wi|S)和P(Wi|H)、DS等信息，即保存训练好的最佳模型的信息
 ```
-&emsp;&emsp;**测试效果：**5574个样本，获取Adaboost算法训练的最佳模型信息（包括词汇列表、P(Wi|S)和P(Wi|H)、DS等），对1000个测试样本，分类的平均错误率约为：0.5%。
+&emsp;&emsp;**测试效果：** 5574个样本，获取Adaboost算法训练的最佳模型信息（包括词汇列表、P(Wi|S)和P(Wi|H)、DS等），对1000个测试样本，分类的平均错误率约为：0.5%。
 
 ## References
 [Running Adaboost on Naive Bayes](http://web.cecs.pdx.edu/~mm/MachineLearningWinter2010/BoostingNaiveBayes.pdf)<br>
