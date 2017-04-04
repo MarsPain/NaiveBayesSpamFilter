@@ -1,6 +1,7 @@
 # NaiveBayesSpamFilter
 利用朴素贝叶斯算法实现垃圾邮件的过滤，并结合Adaboost改进该算法。
-##1 Naive Bayes spam filtering
+
+## 1 Naive Bayes spam filtering
 &emsp;&emsp;假设邮件的内容中包含的词汇为Wi，垃圾邮件Spam，正常邮件ham。
 判断一份邮件，内容包含的词汇为Wi，判断该邮件是否是垃圾邮件，即计算P（S|Wi）这个条件概率。根据Bayes' theorem：
 
@@ -50,7 +51,7 @@
 ```
 &emsp;&emsp;**测试效果：**5574个样本，采用交叉验证，随机选取4574个作为训练样本，产生词汇列表（语料库），对1000个测试样本，分类的平均错误率约为：2.5%。
 
-##2 Running Adaboost on Naive Bayes
+## 2 Running Adaboost on Naive Bayes
 
 &emsp;&emsp;我们在计算ps和ph联合后验概率时，可引入一个调整因子DS，其作用是调整词汇表中某一词汇的“垃圾程度”(spamicity)，
 ```
@@ -76,22 +77,10 @@ DS初始化为和词汇列表大小相等的全一向量
 ```
 &emsp;&emsp;**测试效果：**5574个样本，获取Adaboost算法训练的最佳模型信息（包括词汇列表、P(Wi|S)和P(Wi|H)、DS等），对1000个测试样本，分类的平均错误率约为：0.5%。
 
-##References
+## References
 [Running Adaboost on Naive Bayes](http://web.cecs.pdx.edu/~mm/MachineLearningWinter2010/BoostingNaiveBayes.pdf)<br>
 [Boosting and naive bayesian learning](http://pages.cs.wisc.edu/~dyer/cs540/handouts/elkan97boosting.pdf)<br>
 [Naive Bayes spam filtering](https://en.wikipedia.org/wiki/Naive_Bayes_spam_filtering)<br>
 
 ## License
-Copyright SunnyMarkLiu
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+This project is licensed under the terms of the MIT license.
