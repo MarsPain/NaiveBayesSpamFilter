@@ -35,7 +35,7 @@ def simpleTest():
         boostNaiveBayes.setOfWordsToVecTor(vocabularyList, smsWords[0])
     ps, ph, smsType = boostNaiveBayes.classify(
             pWordsSpamicity, pWordsHealthy, trainDS, pSpam, testWordsMarkedArray)
-    print smsType
+    print(smsType)
 
 
 if __name__ == '__main__':

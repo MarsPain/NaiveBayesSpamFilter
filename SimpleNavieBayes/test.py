@@ -20,7 +20,7 @@ def simpleTest():
 
     smsType = naiveBayes.classify(vocabularyList, pWordsSpamicity,
                                   pWordsHealthy, pSpam, smsWords[0])
-    print smsType
+    print (smsType)
 
 
 def testClassifyErrorRate():
@@ -44,23 +44,23 @@ def testClassifyErrorRate():
         del (classLables[randomIndex])
 
     vocabularyList = naiveBayes.createVocabularyList(smsWords)
-    print "生成语料库！"
+    print ("生成语料库！")
     trainMarkedWords = naiveBayes.setOfWordsListToVecTor(vocabularyList, smsWords)
-    print "数据标记完成！"
+    print ("数据标记完成！")
     # 转成array向量
     trainMarkedWords = np.array(trainMarkedWords)
-    print "数据转成矩阵！"
+    print ("数据转成矩阵！")
     pWordsSpamicity, pWordsHealthy, pSpam = naiveBayes.trainingNaiveBayes(trainMarkedWords, classLables)
 
     errorCount = 0.0
     for i in range(testCount):
         smsType = naiveBayes.classify(vocabularyList, pWordsSpamicity,
                                       pWordsHealthy, pSpam, testWords[i])
-        print '预测类别：', smsType, '实际类别：', testWordsType[i]
+        print ('预测类别：', smsType, '实际类别：', testWordsType[i])
         if smsType != testWordsType[i]:
             errorCount += 1
 
-    print '错误个数：', errorCount, '错误率：', errorCount / testCount
+    print ('错误个数：', errorCount, '错误率：', errorCount / testCount)
 
 
 if __name__ == '__main__':

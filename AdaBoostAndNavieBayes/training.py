@@ -34,12 +34,12 @@ def trainingAdaboostGetDS(iterateNum=40):
     错误率最低的情况，获取最低错误率的vocabularyList
     """
     vocabularyList = boostNaiveBayes.createVocabularyList(smsWords)
-    print "生成语料库！"
+    print ("生成语料库！")
     trainMarkedWords = boostNaiveBayes.setOfWordsListToVecTor(vocabularyList, smsWords)
-    print "数据标记完成！"
+    print ("数据标记完成！")
     # 转成array向量
     trainMarkedWords = np.array(trainMarkedWords)
-    print "数据转成矩阵！"
+    print ("数据转成矩阵！")
     pWordsSpamicity, pWordsHealthy, pSpam = \
         boostNaiveBayes.trainingNaiveBayes(trainMarkedWords, classLables)
 
@@ -65,13 +65,13 @@ def trainingAdaboostGetDS(iterateNum=40):
                 # else:  # 原先为ham，预测成spam，ERROR
                 else:  # 原先为spam，预测成ham
                     DS[testWordsCount != 0] = (DS[testWordsCount != 0] + np.exp(alpha)) / DS[testWordsCount != 0]
-        print 'DS:', DS
+        print ('DS:', DS)
         errorRate = errorCount / testCount
         if errorRate < minErrorRate:
             minErrorRate = errorRate
             ds_errorRate['minErrorRate'] = minErrorRate
             ds_errorRate['DS'] = DS
-        print '第 %d 轮迭代，错误个数 %d ，错误率 %f' % (i, errorCount, errorRate)
+        print ('第 %d 轮迭代，错误个数 %d ，错误率 %f' % (i, errorCount, errorRate))
         if errorRate == 0.0:
             break
     ds_errorRate['vocabularyList'] = vocabularyList

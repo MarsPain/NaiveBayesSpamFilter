@@ -10,14 +10,14 @@ import SimpleNavieBayes.NavieBayes as naiveBayes
 filename = '../emails/training/SMSCollection.txt'
 smsWords, classLables = naiveBayes.loadSMSData(filename)
 vocabularyList = naiveBayes.createVocabularyList(smsWords)
-print "生成语料库！"
+print ("生成语料库！")
 trainMarkedWords = naiveBayes.setOfWordsListToVecTor(vocabularyList, smsWords)
-print "数据标记完成！"
+print ("数据标记完成！")
 # 转成array向量
 trainMarkedWords = np.array(trainMarkedWords)
-print "数据转成矩阵！"
+print ("数据转成矩阵！")
 pWordsSpamicity, pWordsHealthy, pSpam = naiveBayes.trainingNaiveBayes(trainMarkedWords, classLables)
-print 'pSpam:', pSpam
+print ('pSpam:', pSpam)
 fpSpam = open('pSpam.txt', 'w')
 spam = pSpam.__str__()
 fpSpam.write(spam)
