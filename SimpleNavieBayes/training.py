@@ -30,5 +30,5 @@ for i in range(len(vocabularyList)):
 fw.flush()
 fw.close()
 # 保存训练阶段获取的参数：pWordsSpamicity和pWordsHealthy
-np.savetxt('pWordsSpamicity.txt', pWordsSpamicity, delimiter='\t')
+np.savetxt('pWordsSpamicity.txt', pWordsSpamicity, delimiter='\t')  #savetxt和上面那种组合open和write的方法有什么不同。
 np.savetxt('pWordsHealthy.txt', pWordsHealthy, delimiter='\t')
